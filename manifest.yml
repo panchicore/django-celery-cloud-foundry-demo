@@ -1,0 +1,38 @@
+---
+applications:
+- name: panchicore-web
+  host: panchicore-web
+  domain: cfapps.io
+  buildpack: https://github.com/cloudfoundry/python-buildpack
+  command: python manage.py runserver --insecure 0.0.0.0:$PORT
+  instances: 1
+  memory: 512M
+  disk_quota: 1G
+  timeout: 10
+  services:
+    - hypermap-db-hippo
+    - panchicore-papertrail
+    - panchicore-redis
+- name: panchicore-celery
+  host: panchicore-celery
+  domain: cfapps.io
+  no-route: true
+  buildpack: https://github.com/cloudfoundry/python-buildpack
+  command: python manage.py runserver --insecure 0.0.0.0:$PORT & celery -A tasks worker --loglevel=info --concurrency=1
+  instances: 1
+  memory: 512M
+  disk_quota: 1G
+  timeout: 10
+  services:
+    - hypermap-db-hippo
+    - panchicore-redis
+    - panchicore-papertrail
+count, 'total': total}
+            )
+        count = count + 1
+    return True
+
+
+@shared_task(bind=True)
+def test(self):
+    return "OK"
